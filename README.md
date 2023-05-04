@@ -30,7 +30,7 @@ For convenience, set the directory containing the data or saving the results:
 ```
 dirModel <- "J:/Xiao-et-al-2023-age-semen-models"  #  model files
 dirData <- paste(dirModel, "/example_data", sep = "")  #  genotyping tables
-dirResult <- paste(dirModel, "/results", sep = "")  # for saving results
+dirResult <- paste(dirModel, "/example_results", sep = "")  # for saving results
 ```
 
 ## panel-I model
