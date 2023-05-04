@@ -6,7 +6,7 @@ CpG markers
 Accurate age estimation from semen has the potential to significantly narrow
 down the pool of unidentified suspects in sexual assault investigations. In a
 study, we trained three models using methylation data of 21 sperm-specific 
-age-related CpG (AR-CpG) markers in 253 sperm DNA samples (22¨C67.19 years).
+age-related CpG (AR-CpG) markers in 253 sperm DNA samples (22 years to 67.19 years).
 Given that these methylation data are generated using two methylation SNaPshot
 assays, designated as panel I and panel II, we named these three models as
 panel-I model, panel-II model, and two-panels model, respectively.
