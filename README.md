@@ -25,7 +25,7 @@ Before starting, download files required to run the three models:
 options(stringsAsFactors = FALSE)
 rm(list = ls())
 ```
-## Set directory
+## Set working directory
 For convenience, set the directory containing the data or saving the results:
 ```
 dirModel <- "J:/Xiao-et-al-2023-age-semen-models"  #  model files
