@@ -44,7 +44,7 @@ Prepare data:
 ```
 # There are several ways to prepare data used for age estimation. One way is
 # to use a GeneMapper ID/IDX Software to export the genotyping table or 
-# the sizing table as a '.txt' file. Another way is to maker a '.txt' file
+# the sizing table as a '.txt' file. Another way is to make a '.txt' file
 # organized as shown below and contain at least the columns named 
 # "Sample.Name", "Panel", "Marker", "Allele.1", "Allele.2", "Height.1", 
 # and "Height.2".
