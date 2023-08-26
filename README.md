@@ -174,12 +174,12 @@ Prepare data:
 # SN001	Sperm_AR-CpG_Panel_II	cg24812634	C	T	112	2789	...
 ```
 
-Run the two-panels model on your data using the "two-panels_model.R" script 
+Run the panels I & II model on your data using the "panels_I_&_II_model.R" script 
 provided. The only thing you have to do is to copy the prepared data file into
 the 'dirData' folder.
 ```
 setwd(dirModel)
-source('two_panels_model.R')
+source('panels_I_&_II_model.R')
 ```
 The output 'estimated_age' is in years and is automatically printed in the R
 console but is also saved as a '.csv' file, which can be found in the
