@@ -7,11 +7,12 @@ Accurate age estimation from semen has the potential to significantly narrow
 down the pool of unidentified suspects in sexual assault investigations. In a
 study, we trained seven models using methylation data of 21 sperm-specific 
 age-related CpG (AR-CpG) markers in 253 sperm DNA samples (ages 22 years to 
-67.19 years). Given that these methylation data are generated using two 
+67 years). Given that these methylation data are generated using two 
 methylation SNaPshot assays, designated as panel I and panel II, we named 
-three of these models as panel I model, panel II model, and panels I & II model, 
-respectively. Additionally, we also provided four other simplified models, named
-3-CpG model, 5-CpG model, 9-CpG model, and 14-CpG model, respectively.
+three of these models as panel I model (n = 11), panel II model (n = 10), 
+and panels I & II model (n = 21), respectively. Additionally, we also 
+provided four other simplified models, named 3-CpG model, 5-CpG model, 
+9-CpG model, and 14-CpG model, respectively.
 
 The following steps are outlined to demonstrate the functionality of these
 seven models. These models are to be used with methylation data generated
