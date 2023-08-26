@@ -1,6 +1,6 @@
 # Xiao-et-al-2023-age-semen-models
 
-Final models for age estimation from semen using sperm-specific age-related
+Models for age estimation from semen using sperm-specific age-related
 CpG markers
 
 Accurate age estimation from semen has the potential to significantly narrow
