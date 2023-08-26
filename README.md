@@ -127,7 +127,7 @@ console but is also saved as a '.csv' file, which can be found in the
 print(estimated_age)
 
 #   Sample.Name Estimated.Age
-# 1       SN001      48.98424
+# 1       SN001      48.80101
 ```
 
 ## panels I & II model
