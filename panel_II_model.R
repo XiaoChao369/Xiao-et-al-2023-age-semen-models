@@ -22,11 +22,11 @@
 
 # Description -----------------------------------------------------------------
 # 
-# The panel-II model is a support vector machine with radial basis function
-# kernel (svmRadial) model, including 10 sperm-specific AR-CpG markers, namely
-# cg06304190, cg06979108, cg12837463, cg12277678, cg13872326,
-# cg20602007, cg25187042, cg21843517, cg04123357, and cg24812634. This model can
-# be used to estimate individual age from semen DNA or better from sperm DNA.
+# The panel II model is a neural network (neuralnet) model, including 10 
+# sperm-specific AR-CpG markers, namely cg06304190, cg06979108, cg12837463, 
+# cg12277678, cg13872326, cg20602007, cg25187042, cg21843517, cg04123357, 
+# and cg24812634. This model can be used to estimate individual age from 
+# semen DNA or better from sperm DNA.
 #
 # Input: a genotyping table or a sizing table in '.txt' format exported
 # using a GeneMapper ID/IDX Software. Ensure the exported data are
@@ -47,7 +47,7 @@
 # SN001	Sperm_AR-CpG_Panel_II	cg04123357	C	T	2452	442	...
 # SN001	Sperm_AR-CpG_Panel_II	cg24812634	C	T	112	2789	...
 #
-# Output: the donor's age estimated by the panel-II model.
+# Output: the donor's age estimated by the panel II model.
 
 
 # Encode statement ------------------------------------------------------------
@@ -69,7 +69,7 @@ library(tidyr)  # for data wrangling
 ## Load panel-II model ---------------------------------------------------------
 # https://github.com/XiaoChao369/Xiao-et-al-2023-age-semen-models
 setwd(dirModel)
-panel_II_model <- readRDS("panel_II_svmRadial_model.rds")
+panel_II_model <- readRDS("panel_II_neuralnet_model.rds")
 
 ## Prepare data ---------------------------------------------------------------
 # Read the genotyping table or the sizing table
@@ -114,7 +114,7 @@ meth_data <- geno_data %>%
   dplyr::group_by(Sample.Name, Panel, Marker) %>%
   dplyr::summarise(Meth.Level = Height.1/(Height.1 + Height.2))
 
-# # A tibble: 10 ¡Á 4
+# # A tibble: 10 ?? 4
 # # Groups:   Sample.Name, Panel [1]
 #    Sample.Name Panel                 Marker     Meth.Level
 #    <chr>       <chr>                 <chr>           <dbl>
@@ -138,12 +138,12 @@ meth_data <- ungroup(meth_data) %>%
   dplyr::select(-Panel) %>%
   tidyr::spread(key = Marker, value = Meth.Level)
 
-# # A tibble: 1 ¡Á 12
+# # A tibble: 1 ?? 12
 #   Sample.Name cg04123357 cg06304190 cg06979108 cg12277678 cg12837463  ...
 #   <chr>            <dbl>      <dbl>      <dbl>      <dbl>      <dbl>  ...
 # 1 SN001            0.847      0.562      0.730      0.670      0.476  ...
 
-## Estimate age using the panel-II model ---------------------------------------
+## Estimate age using the panel II model ---------------------------------------
 # Estimate age
 estimated_age <- data.frame(
   Sample.Name = meth_data$Sample.Name,

@@ -22,10 +22,9 @@
 
 # Description -----------------------------------------------------------------
 # 
-# The panel I model is a support vector machine with polynomial kernel (svmPoly)
-# model, including 11 AR-CpG markers, namely cg01789162, cg11262154, cg19998819,
-# cg27231587, cg18037145, cg19983027, cg27111970, cg03634854, cg03030301,
-# cg04119405, and cg25715498. This model can be used to estimate individual age
+# The 5-CpG model is a support vector machine with polynomial kernel (svmPoly)
+# model, including 5 AR-CpG markers, namely cg21843517, cg12837463, cg19998819, 
+# cg13872326, and cg03634854. This model can be used to estimate individual age
 # from semen DNA or better from sperm DNA.
 #
 # Input: a genotyping table or a sizing table in '.txt' format exported
@@ -46,7 +45,7 @@
 # SN001	Sperm_AR-CpG_Panel_I	cg04119405	G	A	1670	1476  ...
 # SN001	Sperm_AR-CpG_Panel_I	cg25715498	G	A	3351	383 ...
 #
-# Output: the donor's age estimated by the panel-I model.
+# Output: the donor's age estimated by the 5-CpG model.
 
 
 # Encode statement ------------------------------------------------------------
@@ -65,15 +64,15 @@ if (!requireNamespace("tidyr", quietly = TRUE))
 library(tidyr)  # for data wrangling
 
 
-## Load panel I model ---------------------------------------------------------
+## Load 5-CpG model ---------------------------------------------------------
 # https://github.com/XiaoChao369/Xiao-et-al-2023-age-semen-models
 setwd(dirModel)
-panel_I_model <- readRDS("panel_I_svmPoly_model.rds")
+panel_5_CpG_model <- readRDS("5_CpG_svmPoly_model.rds")
 
 ## Prepare data ---------------------------------------------------------------
 # Read the genotyping table or the sizing table
 setwd(dirData)
-geno_data <- read.table("SN001_panel_I.txt", header = TRUE)
+geno_data <- read.table("SN001_panels_I_&_II.txt", header = TRUE)
 
 # Sample.Name	Panel	Marker	Allele.1	Allele.2	Height.1	Height.2  ...
 # SN001	Sperm_AR-CpG_Panel_I	cg01789162	G	A	213	1524  ...
@@ -89,12 +88,8 @@ geno_data <- read.table("SN001_panel_I.txt", header = TRUE)
 # SN001	Sperm_AR-CpG_Panel_I	cg25715498	G	A	3351	383 ...
 
 # Subset data
-panel <- "Sperm_AR-CpG_Panel_I"
-markers <- c("cg01789162", "cg11262154", "cg19998819", "cg27231587", 
-             "cg18037145", "cg19983027", "cg27111970", "cg03634854", 
-             "cg03030301", "cg25715498", "cg04119405")
+markers <- c("cg21843517", "cg12837463", "cg19998819", "cg13872326", "cg03634854")
 geno_data <- geno_data %>%
-  dplyr::filter(Panel == panel) %>%
   dplyr::filter(Marker %in% markers)
 
 # Check data
@@ -102,7 +97,6 @@ stopifnot(exprs = {
   isTRUE(sum(unique(geno_data$Marker) %in% markers) != 0)
   isTRUE(sum(markers %in% unique(geno_data$Marker)) != 0)
   isTRUE((nrow(geno_data) %% length(markers)) %in% 0)
-  all.equal(unique(geno_data$Panel), panel)
 })
 
 # Calculate methylation level for each marker
@@ -111,52 +105,49 @@ geno_data$Height.2 <- as.numeric(geno_data$Height.2)
 meth_data <- geno_data %>%
   dplyr::group_by(Sample.Name, Panel, Marker) %>%
   dplyr::summarise(Meth.Level = Height.1/(Height.1 + Height.2))
+meth_data$Marker <- factor(meth_data$Marker, levels = markers)
+meth_data <- meth_data %>%
+  dplyr::arrange(Marker)
 
-# # A tibble: 11 ?? 4
-# # Groups:   Sample.Name, Panel [1]
-#    Sample.Name Panel                Marker     Meth.Level
-#    <chr>       <chr>                <chr>           <dbl>
-#  1 SN001       Sperm_AR-CpG_Panle_I cg01789162     0.123 
-#  2 SN001       Sperm_AR-CpG_Panle_I cg03030301     0.380 
-#  3 SN001       Sperm_AR-CpG_Panle_I cg03634854     0.299 
-#  4 SN001       Sperm_AR-CpG_Panle_I cg04119405     0.531 
-#  5 SN001       Sperm_AR-CpG_Panle_I cg11262154     0.890 
-#  6 SN001       Sperm_AR-CpG_Panle_I cg18037145     0.701 
-#  7 SN001       Sperm_AR-CpG_Panle_I cg19983027     0.0707
-#  8 SN001       Sperm_AR-CpG_Panle_I cg19998819     0.838 
-#  9 SN001       Sperm_AR-CpG_Panle_I cg25715498     0.897 
-# 10 SN001       Sperm_AR-CpG_Panle_I cg27111970     0.143 
-# 11 SN001       Sperm_AR-CpG_Panle_I cg27231587     0.240
+# # A tibble: 5 × 4
+# # Groups:   Sample.Name, Panel [2]
+# Sample.Name Panel                 Marker     Meth.Level
+# <chr>       <chr>                 <fct>           <dbl>
+#   1 SN001       Sperm_AR-CpG_Panel_II cg21843517      0.692
+# 2 SN001       Sperm_AR-CpG_Panel_II cg12837463      0.476
+# 3 SN001       Sperm_AR-CpG_Panel_I  cg19998819      0.838
+# 4 SN001       Sperm_AR-CpG_Panel_II cg13872326      0.747
+# 5 SN001       Sperm_AR-CpG_Panel_I  cg03634854      0.299
 
 # Save methylation data into a .csv file
 setwd(dirResult)
-write.csv(meth_data, "meth_data_panel_I.csv", quote = FALSE, row.names = FALSE)
+write.csv(meth_data, "meth_data_panel_5_CpG.csv", quote = FALSE, row.names = FALSE)
 
 # Convert long data to wide data
 meth_data <- ungroup(meth_data) %>%
   dplyr::select(-Panel) %>%
   tidyr::spread(key = Marker, value = Meth.Level)
 
-# # A tibble: 1 ?? 12
-#   Sample.Name cg01789162 cg03030301 cg03634854 cg04119405 cg11262154  ...
-#   <chr>            <dbl>      <dbl>      <dbl>      <dbl>      <dbl>  ...
-# 1 SN001            0.123      0.380      0.299      0.531      0.890  ...
+# # A tibble: 1 × 6
+# Sample.Name cg21843517 cg12837463 cg19998819 cg13872326 cg03634854
+# <chr>            <dbl>      <dbl>      <dbl>      <dbl>      <dbl>
+#   1 SN001            0.692      0.476      0.838      0.747      0.299
 
-## Estimate age using the panel I model ---------------------------------------
+## Estimate age using the 5-CpG model ---------------------------------------
 # Estimate age
 estimated_age <- data.frame(
   Sample.Name = meth_data$Sample.Name,
-  Estimated.Age = predict(panel_I_model, newdata = meth_data[,-1])
+  Estimated.Age = predict(panel_5_CpG_model, newdata = meth_data[,-1])
 )
 # Save estimated ages into a .csv file
 setwd(dirResult)
-write.csv(estimated_age, "estimated_age_panel_I.csv", quote = FALSE, 
+write.csv(estimated_age, "estimated_age_panel_5_CpG.csv", quote = FALSE, 
           row.names = FALSE)
 # Print estimated ages to the R console
 print(estimated_age)
 
-#   Sample.Name Estimated.Age
-# 1       SN001      47.62784
+# Sample.Name Estimated.Age
+# 1       SN001      49.59422
 
 
 

@@ -1,22 +1,24 @@
 # Xiao-et-al-2023-age-semen-models
 
-Three models for age estimation from semen using sperm-specific age-related
+Final models for age estimation from semen using sperm-specific age-related
 CpG markers
 
 Accurate age estimation from semen has the potential to significantly narrow
 down the pool of unidentified suspects in sexual assault investigations. In a
-study, we trained three models using methylation data of 21 sperm-specific 
-age-related CpG (AR-CpG) markers in 253 sperm DNA samples (22 years to 67.19 years).
-Given that these methylation data are generated using two methylation SNaPshot
-assays, designated as panel I and panel II, we named these three models as
-panel-I model, panel-II model, and two-panels model, respectively.
+study, we trained seven models using methylation data of 21 sperm-specific 
+age-related CpG (AR-CpG) markers in 253 sperm DNA samples (ages 22 years to 
+67.19 years). Given that these methylation data are generated using two 
+methylation SNaPshot assays, designated as panel I and panel II, we named 
+three of these models as panel I model, panel II model, and panels I & II model, 
+respectively. Additionally, we also provided four other simplified models, named
+3-CpG model, 5-CpG model, 9-CpG model, and 14-CpG model, respectively.
 
 The following steps are outlined to demonstrate the functionality of these
-three models. These models are to be used with methylation data generated
+seven models. These models are to be used with methylation data generated
 using methylation SNaPshot assays.
 
 ## Download files
-Before starting, download files required to run the three models:
+Before starting, download files required to run the seven models:
 ```
 # https://github.com/XiaoChao369/Xiao-et-al-2023-age-semen-models
 ```
@@ -33,8 +35,8 @@ dirData <- paste(dirModel, "/example_data", sep = "")  #  genotyping tables
 dirResult <- paste(dirModel, "/example_results", sep = "")  # for saving results
 ```
 
-## panel-I model
-The panel-I model is a support vector machine with polynomial kernel (svmPoly)
+## panel I model
+The panel I model is a support vector machine with polynomial kernel (svmPoly)
 model, including 11 AR-CpG markers, namely cg01789162, cg11262154, cg19998819,
 cg27231587, cg18037145, cg19983027, cg27111970, cg03634854, cg03030301,
 cg04119405, and cg25715498. This model can be used to estimate individual age
@@ -62,7 +64,7 @@ Prepare data:
 # SN001	Sperm_AR-CpG_Panle_I	cg04119405	G	A	1670	1476  ...
 # SN001	Sperm_AR-CpG_Panle_I	cg25715498	G	A	3351	383 ...
 ```
-Run the panel-I model on your data using the "panel_I_model.R" script provided.
+Run the panel I model on your data using the "panel_I_model.R" script provided.
 The only thing you have to do is to copy the prepared data file into
 the 'dirData' folder.
 ```
@@ -79,12 +81,12 @@ print(estimated_age)
 # 1       SN001      47.62784
 ```
 
-## panel-II model
-The panel-II model is a support vector machine with radial basis function
-kernel (svmRadial) model, including 10 sperm-specific AR-CpG markers, namely
-cg06304190, cg06979108, cg12837463, cg12277678, cg13872326,
-cg20602007, cg25187042, cg21843517, cg04123357, and cg24812634. This model can
-be used to estimate individual age from semen DNA or better from sperm DNA.
+## panel II model
+The panel II model is a neural network (neuralnet) model, including 10 
+sperm-specific AR-CpG markers, namely cg06304190, cg06979108, cg12837463, 
+cg12277678, cg13872326, cg20602007, cg25187042, cg21843517, cg04123357, 
+and cg24812634. This model can be used to estimate individual age from 
+semen DNA or better from sperm DNA.
 
 Prepare data:
 ```
@@ -110,7 +112,7 @@ Prepare data:
 # SN001	Sperm_AR-CpG_Panel_II	cg24812634	C	T	112	2789	...
 ```
 
-Run the panel-II model on your data using the "panel_II_model.R" script
+Run the panel II model on your data using the "panel_II_model.R" script
 provided. The only thing you have to do is to copy the prepared data file into
 the 'dirData' folder.
 ```
@@ -127,8 +129,8 @@ print(estimated_age)
 # 1       SN001      48.98424
 ```
 
-## two-panels model
-The two-panels model is a Bayesian regularized neural network (brnn) model,
+## panels I & II model
+The panels I & II model is a Bayesian regularized neural network (brnn) model,
 including 21 sperm-specific AR-CpG markers, namely 
 cg01789162, cg11262154, cg19998819, cg27231587, cg18037145, cg19983027, 
 cg27111970, cg03634854, cg03030301, cg04119405, cg25715498, cg06304190, 
@@ -186,6 +188,240 @@ print(estimated_age)
 
 #   Sample.Name Estimated.Age
 # 1       SN001       48.6893
+```
+
+## 3-CpG model
+The 3-CpG model is a support vector machine with polynomial kernel (svmPoly)
+model, including 3 AR-CpG markers, namely cg21843517, cg12837463, and cg19998819. 
+This model can be used to estimate individual age from semen DNA 
+or better from sperm DNA.
+
+Prepare data:
+```
+# There are several ways to prepare data used for age estimation. One way is
+# to use a GeneMapper ID/IDX Software to export the genotyping table or 
+# the sizing table as a '.txt' file. Another way is to maker a '.txt' file
+# organized as shown below and contain at least the columns named 
+# "Sample.Name", "Panel", "Marker", "Allele.1", "Allele.2", "Height.1", 
+# and "Height.2".
+
+# Sample.Name	Panel	Marker	Allele.1	Allele.2	Height.1	Height.2  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg01789162	G	A	213	1524  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg11262154	G	A	2291	284 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg19998819	G	A	1406	271 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg27231587	G	A	541	1715  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg18037145	G	A	1765	754 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg19983027	G	A	131	1721  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg27111970	G	A	396	2367  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg03634854	G	A	801	1874  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg03030301	G	A	701	1146  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg04119405	G	A	1670	1476  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg25715498	G	A	3351	383 ...
+# SN001	Sperm_AR-CpG_Panel_II	BC	C	T	NA	1311	...
+# SN001	Sperm_AR-CpG_Panel_II	cg06304190	C	T	1006	783	...
+# SN001	Sperm_AR-CpG_Panel_II	cg06979108	C	T	1743	646	...
+# SN001	Sperm_AR-CpG_Panel_II	cg12837463	C	T	1546	1703	...
+# SN001	Sperm_AR-CpG_Panel_II	cg20828122	C	T	128	1619	...
+# SN001	Sperm_AR-CpG_Panel_II	cg12277678	C	T	1003	495	...
+# SN001	Sperm_AR-CpG_Panel_II	cg13872326	C	T	1178	398	...
+# SN001	Sperm_AR-CpG_Panel_II	cg20602007	C	T	1237	422	...
+# SN001	Sperm_AR-CpG_Panel_II	cg25187042	C	T	1606	590	...
+# SN001	Sperm_AR-CpG_Panel_II	cg21843517	C	T	1459	649	...
+# SN001	Sperm_AR-CpG_Panel_II	cg04123357	C	T	2452	442	...
+# SN001	Sperm_AR-CpG_Panel_II	cg24812634	C	T	112	2789	...
+```
+
+Run the 3-CpG model on your data using the "3_CpG_model.R" script 
+provided. The only thing you have to do is to copy the prepared data file into
+the 'dirData' folder.
+```
+setwd(dirModel)
+source('3_CpG_model.R')
+```
+The output 'estimated_age' is in years and is automatically printed in the R
+console but is also saved as a '.csv' file, which can be found in the
+'dirResult' folder.
+```
+print(estimated_age)
+
+#   Sample.Name Estimated.Age
+# 1       SN001       47.86754
+```
+
+## 5-CpG model
+The 5-CpG model is a support vector machine with polynomial kernel (svmPoly)
+model, including 5 AR-CpG markers, namely cg21843517, cg12837463, cg19998819, 
+cg13872326, and cg03634854. This model can be used to estimate individual age
+from semen DNA or better from sperm DNA.
+
+Prepare data:
+```
+# There are several ways to prepare data used for age estimation. One way is
+# to use a GeneMapper ID/IDX Software to export the genotyping table or 
+# the sizing table as a '.txt' file. Another way is to maker a '.txt' file
+# organized as shown below and contain at least the columns named 
+# "Sample.Name", "Panel", "Marker", "Allele.1", "Allele.2", "Height.1", 
+# and "Height.2".
+
+# Sample.Name	Panel	Marker	Allele.1	Allele.2	Height.1	Height.2  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg01789162	G	A	213	1524  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg11262154	G	A	2291	284 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg19998819	G	A	1406	271 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg27231587	G	A	541	1715  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg18037145	G	A	1765	754 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg19983027	G	A	131	1721  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg27111970	G	A	396	2367  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg03634854	G	A	801	1874  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg03030301	G	A	701	1146  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg04119405	G	A	1670	1476  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg25715498	G	A	3351	383 ...
+# SN001	Sperm_AR-CpG_Panel_II	BC	C	T	NA	1311	...
+# SN001	Sperm_AR-CpG_Panel_II	cg06304190	C	T	1006	783	...
+# SN001	Sperm_AR-CpG_Panel_II	cg06979108	C	T	1743	646	...
+# SN001	Sperm_AR-CpG_Panel_II	cg12837463	C	T	1546	1703	...
+# SN001	Sperm_AR-CpG_Panel_II	cg20828122	C	T	128	1619	...
+# SN001	Sperm_AR-CpG_Panel_II	cg12277678	C	T	1003	495	...
+# SN001	Sperm_AR-CpG_Panel_II	cg13872326	C	T	1178	398	...
+# SN001	Sperm_AR-CpG_Panel_II	cg20602007	C	T	1237	422	...
+# SN001	Sperm_AR-CpG_Panel_II	cg25187042	C	T	1606	590	...
+# SN001	Sperm_AR-CpG_Panel_II	cg21843517	C	T	1459	649	...
+# SN001	Sperm_AR-CpG_Panel_II	cg04123357	C	T	2452	442	...
+# SN001	Sperm_AR-CpG_Panel_II	cg24812634	C	T	112	2789	...
+```
+
+Run the 5-CpG model on your data using the "5_CpG_model.R" script 
+provided. The only thing you have to do is to copy the prepared data file into
+the 'dirData' folder.
+```
+setwd(dirModel)
+source('5_CpG_model.R')
+```
+The output 'estimated_age' is in years and is automatically printed in the R
+console but is also saved as a '.csv' file, which can be found in the
+'dirResult' folder.
+```
+print(estimated_age)
+
+#   Sample.Name Estimated.Age
+# 1       SN001       49.59422
+```
+
+## 9-CpG model
+The 9-CpG model is a support vector machine with polynomial kernel (svmPoly)
+model, including 9 AR-CpG markers, namely cg21843517, cg12837463, cg19998819, 
+cg13872326, cg03634854, cg27231587, cg04119405, cg20602007, and cg01789162. 
+This model can be used to estimate individual age from semen DNA or 
+better from sperm DNA.
+
+Prepare data:
+```
+# There are several ways to prepare data used for age estimation. One way is
+# to use a GeneMapper ID/IDX Software to export the genotyping table or 
+# the sizing table as a '.txt' file. Another way is to maker a '.txt' file
+# organized as shown below and contain at least the columns named 
+# "Sample.Name", "Panel", "Marker", "Allele.1", "Allele.2", "Height.1", 
+# and "Height.2".
+
+# Sample.Name	Panel	Marker	Allele.1	Allele.2	Height.1	Height.2  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg01789162	G	A	213	1524  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg11262154	G	A	2291	284 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg19998819	G	A	1406	271 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg27231587	G	A	541	1715  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg18037145	G	A	1765	754 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg19983027	G	A	131	1721  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg27111970	G	A	396	2367  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg03634854	G	A	801	1874  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg03030301	G	A	701	1146  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg04119405	G	A	1670	1476  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg25715498	G	A	3351	383 ...
+# SN001	Sperm_AR-CpG_Panel_II	BC	C	T	NA	1311	...
+# SN001	Sperm_AR-CpG_Panel_II	cg06304190	C	T	1006	783	...
+# SN001	Sperm_AR-CpG_Panel_II	cg06979108	C	T	1743	646	...
+# SN001	Sperm_AR-CpG_Panel_II	cg12837463	C	T	1546	1703	...
+# SN001	Sperm_AR-CpG_Panel_II	cg20828122	C	T	128	1619	...
+# SN001	Sperm_AR-CpG_Panel_II	cg12277678	C	T	1003	495	...
+# SN001	Sperm_AR-CpG_Panel_II	cg13872326	C	T	1178	398	...
+# SN001	Sperm_AR-CpG_Panel_II	cg20602007	C	T	1237	422	...
+# SN001	Sperm_AR-CpG_Panel_II	cg25187042	C	T	1606	590	...
+# SN001	Sperm_AR-CpG_Panel_II	cg21843517	C	T	1459	649	...
+# SN001	Sperm_AR-CpG_Panel_II	cg04123357	C	T	2452	442	...
+# SN001	Sperm_AR-CpG_Panel_II	cg24812634	C	T	112	2789	...
+```
+
+Run the 9-CpG model on your data using the "9_CpG_model.R" script 
+provided. The only thing you have to do is to copy the prepared data file into
+the 'dirData' folder.
+```
+setwd(dirModel)
+source('9_CpG_model.R')
+```
+The output 'estimated_age' is in years and is automatically printed in the R
+console but is also saved as a '.csv' file, which can be found in the
+'dirResult' folder.
+```
+print(estimated_age)
+
+#   Sample.Name Estimated.Age
+# 1       SN001       49.76853
+```
+
+## 14-CpG model
+The 14-CpG model is a support vector machine with polynomial kernel (svmPoly)
+model, including 14 AR-CpG markers, namely cg21843517, cg12837463, cg19998819, 
+cg13872326, cg03634854, cg27231587, cg04119405, cg20602007, cg01789162, 
+cg06304190, cg25715498, cg03030301, cg04123357, and cg18037145. This model 
+can be used to estimate individual age from semen DNA or better from sperm DNA.
+
+Prepare data:
+```
+# There are several ways to prepare data used for age estimation. One way is
+# to use a GeneMapper ID/IDX Software to export the genotyping table or 
+# the sizing table as a '.txt' file. Another way is to maker a '.txt' file
+# organized as shown below and contain at least the columns named 
+# "Sample.Name", "Panel", "Marker", "Allele.1", "Allele.2", "Height.1", 
+# and "Height.2".
+
+# Sample.Name	Panel	Marker	Allele.1	Allele.2	Height.1	Height.2  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg01789162	G	A	213	1524  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg11262154	G	A	2291	284 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg19998819	G	A	1406	271 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg27231587	G	A	541	1715  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg18037145	G	A	1765	754 ...
+# SN001	Sperm_AR-CpG_Panel_I	cg19983027	G	A	131	1721  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg27111970	G	A	396	2367  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg03634854	G	A	801	1874  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg03030301	G	A	701	1146  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg04119405	G	A	1670	1476  ...
+# SN001	Sperm_AR-CpG_Panel_I	cg25715498	G	A	3351	383 ...
+# SN001	Sperm_AR-CpG_Panel_II	BC	C	T	NA	1311	...
+# SN001	Sperm_AR-CpG_Panel_II	cg06304190	C	T	1006	783	...
+# SN001	Sperm_AR-CpG_Panel_II	cg06979108	C	T	1743	646	...
+# SN001	Sperm_AR-CpG_Panel_II	cg12837463	C	T	1546	1703	...
+# SN001	Sperm_AR-CpG_Panel_II	cg20828122	C	T	128	1619	...
+# SN001	Sperm_AR-CpG_Panel_II	cg12277678	C	T	1003	495	...
+# SN001	Sperm_AR-CpG_Panel_II	cg13872326	C	T	1178	398	...
+# SN001	Sperm_AR-CpG_Panel_II	cg20602007	C	T	1237	422	...
+# SN001	Sperm_AR-CpG_Panel_II	cg25187042	C	T	1606	590	...
+# SN001	Sperm_AR-CpG_Panel_II	cg21843517	C	T	1459	649	...
+# SN001	Sperm_AR-CpG_Panel_II	cg04123357	C	T	2452	442	...
+# SN001	Sperm_AR-CpG_Panel_II	cg24812634	C	T	112	2789	...
+```
+
+Run the 14-CpG model on your data using the "14_CpG_model.R" script 
+provided. The only thing you have to do is to copy the prepared data file into
+the 'dirData' folder.
+```
+setwd(dirModel)
+source('14_CpG_model.R')
+```
+The output 'estimated_age' is in years and is automatically printed in the R
+console but is also saved as a '.csv' file, which can be found in the
+'dirResult' folder.
+```
+print(estimated_age)
+
+#   Sample.Name Estimated.Age
+# 1       SN001       48.82262
 ```
 
 
